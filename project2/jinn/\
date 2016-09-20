@@ -1,0 +1,357 @@
+#include <iostream>
+#include "stack.h"
+#include "deque.h"
+#include "string.h"
+using namespace std;
+
+
+
+void read_part_1()
+{
+	//Read the number of commands to execute
+    int n;
+    cin >> n;
+    
+    Stack s;
+    // Initialize your stack here...
+    
+    char command1;
+    int value1,value2;
+    
+    while (n--) 
+    {
+        cin >> command1;
+        if (command1 == 'i')
+        {
+            cin >> value1 >> value2;
+            s.push(pair<int,int>(value1,value2));
+            // push the values in your stack here.
+        }
+        if (command1 == 'p')
+        {
+	    if(s.pos >= 0 ){
+	    	pair<int,int>p;
+		p = s.pop();
+	    	cout << p.first << " " << p.second << endl;
+	    }else{
+	    	cout << "empty" << endl;
+	    }
+            // Call Pop here, and print the values.
+        }
+    }
+}
+
+void read_part_2()
+{
+	int num_rows,num_cols;
+	Stack s;
+	Stack t;
+	//converse output
+	Stack converse;
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int flag = 0;
+	int x;
+	int y;
+	pair<int,int>pos;
+	int count = 0;
+	cin >> num_rows >> num_cols;
+	//Read in the number of rows and cols in the puzzle
+	int total = num_rows * num_cols;
+
+	//Declare the word search array
+	
+	char m[total + 1] ;
+	for(i;i<total;i++){
+		cin >> m[i];
+	}
+	m[i] = '\0';
+	i = 0;
+	//Fill in the array
+	string word;
+	int wordLength;
+	cin >> word;
+	wordLength = word.length();
+	int temp = wordLength;
+//	cout << m << endl;
+	//Read in the word we're looking for
+	for(i;i<total;i++){
+		if(word[0] == m[i]){
+			x = i/num_cols;
+			y = i%num_cols;
+			pos.first = x;
+			pos.second = y;
+			s.push(pos);
+			count ++;
+			flag = 1;
+			
+		}
+	}
+	if(flag == 0){
+		cout << "not found" << endl;
+		exit(1);
+	}
+	//Check if finding a letter
+	if(wordLength == 1){
+		pos = s.pop();
+		cout << pos.first << " " << pos.second << endl;
+		exit(1);
+	}
+	////////////////TEST/////////////
+//	pair<int,int> test;
+//	for(j;j<count;j++){
+//		test = s.pop();
+//		cout << "(" <<test.first << test.second << ")" << endl;
+//	}
+//
+//
+	int r;
+	int c;
+	int where;
+	int wordWhere = 1;
+	int find = -1;
+	pair<int,int>save;
+	pair<int,int>any;
+	pair<int,int>check_s;
+	pair<int,int>check_t;
+	int check_letter_s;
+	int check_letter_t;
+	i = r - 1;
+	j = c - 1;
+	int result;
+	pair<int,int>del;
+	//times of push next letter(How many next letters)
+	int nCount = 0;
+	int same_letter[wordLength + 1];
+	same_letter[0] = count;
+	int index_same_letter = 1;
+	int same_letter_reduce;
+	//How many entried in Stack s
+	int size_s = count;
+	int size_t = 0;
+	k = 1;
+	for(k ;k <temp;k++){
+//		cout << "Inside of k, k:" << k << '\n'<<"find:"<< find << endl;
+		cout  << "AFTER check find, we want to find word[k]: "<< word[k] << "  k = "<< k <<endl;
+		find = 0;
+		any = s.pop();
+		t.push(any);
+		size_t ++;
+		r = any.first;
+		c = any.second;
+		i = r - 1;
+		j = c - 1;
+//		cout << "s,pop():(" << "r:" << r << ';' << "c:" << c << ")"<< endl;
+			
+		for(i;i<=r+1;i++){
+//			cout << "\nInside of i, i:" << i << endl;
+			for(j;j<=c+1;j++){
+//				cout << "Inside of j, j:"<< j << endl;
+				if(i<0 || j<0 || i>=num_rows || j>=num_cols){
+					continue;
+				}else{
+					where = i*num_cols+j;
+					if(m[where] == word[k]){
+						save.first = i;
+						save.second = j;
+						s.push(save);
+//						cout << "i=" << i << " // " << "j=" << j << " // " << "k=" << k << " // " << "s.push:(" << save.first << save.second<<")"<<endl;
+						nCount ++;
+						size_s ++;
+//						cout << "size_s in loop: " << size_s << endl;
+						find = 1;
+//						cout<< "nCount:" << nCount << " size_s:" << size_s << endl;
+					}
+				}
+			}
+			j = c - 1;
+		}
+///////////////////////////////////////
+		if(find == 1){
+			same_letter[index_same_letter] = nCount;
+//			cout << "find letter- index_same_letter: "<< index_same_letter << " nCount: " << nCount << " same_letter[index_same_letter]: " << same_letter[index_same_letter] << endl;  
+			index_same_letter ++;
+			nCount = 0;
+			result = 1;
+		}else if(find == 0){
+		/////////////////////
+	//		check_s = s.pop();
+	//		s.push(check);
+	//		check_letter_s = check
+		//////////////////////
+			same_letter[index_same_letter] = nCount;
+			cout<<"elements in the same_letter"<< same_letter[0] << same_letter[1] << same_letter[3] << same_letter[4] << same_letter[5] << endl;
+////////////
+//			del = t.pop();
+//			index_same_letter --;
+//			cout << "index_same_letter:" << index_same_letter << endl;
+//			cout << "Not find letter, before reduce the count in same_letter[index_same_letter]" << same_letter[index_same_letter] << endl;
+//			same_letter_reduce = same_letter[index_same_letter];
+//			same_letter_reduce --;
+//			same_letter[index_same_letter] = same_letter_reduce;
+//			cout << "Not find letter, this same_letter: [index_same_letter] " << same_letter[index_same_letter] << endl;
+///////////////
+			if(same_letter[index_same_letter] != 0){
+				k = k - 1;
+				del = t.pop();
+				size_s --;
+				size_t --;
+				if(size_s <= 0){
+					result = 0;
+					break;
+				}
+			}else if(same_letter[index_same_letter] == 0){
+				index_same_letter --;
+				k = k-2;
+//				cout<< "index_same_letter before whileloop: "<< index_same_letter << endl;
+//				cout<< "same_letter[index_same_letter] before whileloop: "<< same_letter[index_same_letter] << endl;
+				while(same_letter[index_same_letter] == 1){
+					same_letter[index_same_letter] --;
+//					cout<< "same_letter in the while loop: " << same_letter << endl;
+					k --;
+					index_same_letter--;
+					del = t.pop();
+//					cout << "delete t.pop():" << del.first << " " << del.second<< endl;
+					size_t --;
+					if(index_same_letter <= 0 || size_t <= 0){
+						break;
+					}
+					
+				//	k --;
+//					cout << "*******index_same_letter:" << index_same_letter << " k:" << k << endl;
+				//	del = t.pop();
+				//	size_t --;
+//					cout << "After While, k:" << k << " || t.pop():" << del.first << " " << del.second << " || sieze_t:" << size_t <<endl;
+				}
+				if(same_letter[index_same_letter] > 1){
+					del = t.pop();
+//					cout << "delete t.pop(): " << del.first << " " << del.second << endl;
+					size_t --;
+				}
+				if(index_same_letter < 0){
+					result = 0;
+					break;
+				}
+			}
+/*			k = k - 1;
+			size_s --;
+			cout << "size_s in check find if condition: " << size_s << endl;
+			del = t.pop();
+			size_t --;
+			cout << "Delete:("<< del.first <<" "<< del.second <<")"<< endl;
+			if(size_s <= 0){
+				result = 0;
+				break;
+*/
+	//		}
+		}
+///////////////////////////////////////
+	}
+	pair<int,int>t_out;
+	//Converse output
+	pair<int,int>c_out;
+	if(result == 1){
+		any = s.pop();
+		t.push(any);
+		for(k = 0; k<=size_t ; k++){
+			t_out = t.pop();
+			converse.push(t_out);
+		}
+		for(k = 0; k<=size_t; k++){
+			c_out = converse.pop();
+			x = c_out.first;
+			y = c_out.second;
+			cout << x << " " << y << endl;
+		}
+	}else{
+		cout << "not found" << endl;		
+	}
+
+/*	if(flag == 0){
+		pair<int,int>out;
+		for(i = 0; i < wordLength;i++){
+			out = s.pop();
+			cout << out.first << ' ' << out.second << endl;
+		}	
+	}else if(flag == -1){
+		cout << "not found" << endl;
+	}
+*/
+	//TODO: Part 1b: Run the word search
+}
+
+void read_part_3()
+{
+	//Read in the number of commands to execute
+	int n;
+	int num;
+	cin >> n;
+	char command1,command2;
+
+	Deque d;
+	while(n--)
+	{
+		cin >> command1;
+		if(command1 == 'e'){
+			cin >> command2;
+			if(command2 == 'f'){
+			        cin >> num;
+				d.enqueue_front(num);	
+			} else if(command2 == 'b'){
+				cin >> num;
+				d.enqueue_back(num);
+			}
+		}
+		if(command1 == 'd'){
+			cin >> command2;
+			if(command2 == 'f'){
+				num = d.dequeue_front();
+				if(num == -1){
+					cout << "empty" << endl;
+				}else{
+					cout << num << endl;
+				}
+			}else if(command2 == 'b'){
+				num = d.dequeue_back();
+				if(num == -1){
+					cout << "empty" << endl;
+				}else{
+					cout << num << endl;
+				}
+			}		
+		}
+		if(command1 == 's'){
+			num = d.return_size();
+			cout << num << endl;
+		}
+		// process command1 and command2
+	}
+}
+
+void read_input()
+{
+	int project_part;
+	//Read the first line of the test case
+	cin >> project_part;
+	
+	switch(project_part)
+	{
+		case 1:
+			read_part_1();
+			break;
+		case 2:
+			read_part_2();
+			break;
+		case 3:
+			read_part_3();
+			break;
+	}
+}
+
+int main()
+{
+	// Read in the test case
+	read_input();
+	return 0;
+}
